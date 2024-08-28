@@ -1,13 +1,21 @@
-
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Container, Row, Col, Button, Nav } from "react-bootstrap";
-import {useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import './../App.css';
-import { addItem } from "../store/store";
-import { useDispatch } from "react-redux";
-function Detail (props) {
+import {Context1} from './../App';
 
-    let dispatch = useDispatch();
+function Detail (props) {
+    // useContext() : Context1을 해체   {stock, clothes}
+    /*
+    let a = useContext(Context1);
+    console.log(a);
+    console.log(a.stock);
+    */
+
+    let {stock, clothes} = useContext(Context1);
+    console.log(stock);
+    console.log(clothes);
+
     let {index} = useParams();
 
     let findId = props.clothes.find(function(x) {
@@ -38,9 +46,11 @@ function Detail (props) {
         setFade2('end')
     }, [])
 
-    const navigate = useNavigate();
+
     return (
+
         <div>
+            
             { alert ? <h2>2초 이내 구매시 할인</h2> : null}
 
             <Container className={fade2}>
@@ -52,10 +62,7 @@ function Detail (props) {
                         <h4>{findId.title}</h4>
                         <p>{findId.content}</p>
                         <p>{findId.price}원</p>
-                        <Button variant="info" onClick={() => {
-                            dispatch(addItem({id:findId.id, title:findId.title, count:1}));
-                            navigate('/cart');
-                        }} >장바구니에 담기</Button>
+                        <Button variant="info">주문하기</Button>
                     </Col>
                 </Row>
             </Container>
@@ -81,6 +88,8 @@ function Detail (props) {
 function TabContent({tab}) {
     let [fade, setFade] = useState('')
 
+    let {stock} = useContext(Context1);
+
     useEffect(() => {
         setTimeout(() => {setFade('end')},100)
         return () => {
@@ -90,7 +99,7 @@ function TabContent({tab}) {
 
     return( 
         <div className={fade}>
-            { [<div>내용 0</div>, <div>내용 1</div>, <div>내용 2</div>][tab] }
+            { [<div>{stock}</div>, <div>{stock[1]}</div>, <div>{stock[tab]}</div>][tab] }
         </div>
     )
 }

@@ -1,13 +1,20 @@
-
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Nav } from "react-bootstrap";
-import {useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import './../App.css';
-import { addItem } from "../store/store";
-import { useDispatch } from "react-redux";
+
+/*
+    탭 만들기
+*/
+/*
+    애니메이션 만들기
+    1) 애니메이션 동작 전 스타일을 담을 className 설정
+    2) 애니메이션 동작 후 스타일을 담을 className 설정
+    3) transition으로 ?초동안 변하게
+    4) 원할 때 동작 전 className을 동작 후 className으로 변경
+*/
 function Detail (props) {
 
-    let dispatch = useDispatch();
     let {index} = useParams();
 
     let findId = props.clothes.find(function(x) {
@@ -25,7 +32,7 @@ function Detail (props) {
 
     let [num, setNum] = useState('');
     useEffect(() => {
-        if(isNaN(num) == true) { 
+        if(isNaN(num) == true) {  // Not a Number 숫자이면 false, 문자이면 true
             alert('그러지마요');
         }
     },[num])
@@ -38,7 +45,7 @@ function Detail (props) {
         setFade2('end')
     }, [])
 
-    const navigate = useNavigate();
+
     return (
         <div>
             { alert ? <h2>2초 이내 구매시 할인</h2> : null}
@@ -52,10 +59,7 @@ function Detail (props) {
                         <h4>{findId.title}</h4>
                         <p>{findId.content}</p>
                         <p>{findId.price}원</p>
-                        <Button variant="info" onClick={() => {
-                            dispatch(addItem({id:findId.id, title:findId.title, count:1}));
-                            navigate('/cart');
-                        }} >장바구니에 담기</Button>
+                        <Button variant="info">주문하기</Button>
                     </Col>
                 </Row>
             </Container>
@@ -72,12 +76,38 @@ function Detail (props) {
                 </Nav.Item>
             </Nav>
 
+            {/* state가 0이면 내용0을, 1이면 내용1을 보여주기 */}
+            {/* 1. 삼항연산자 사용 */}
+          
+            { tab == 0 ? <div>내용 0</div> : tab == 1 ? <div>내용 1</div> : <div>내용 2</div> } 
+
+            {/* 2. component 사용 */}
             <TabContent tab={tab} />
 
         </div>
     )
 }
 
+// if문 사용
+/*
+function TabContent({tab}) {
+    if(tab == 0)
+        return <div>내용 0</div>
+    else if(tab == 1)
+        return <div>내용 1</div>
+    else
+        return <div>내용 2</div>
+}
+*/
+
+// 배열 리턴
+/*
+function TabContent({tab}) {
+    return [<div>내용 0</div>, <div>내용 1</div>, <div>내용 2</div>][tab]
+}
+*/
+
+// 애니메이션
 function TabContent({tab}) {
     let [fade, setFade] = useState('')
 
